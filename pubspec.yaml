@@ -33,7 +33,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
+  # Temporaneo: consentiamo qualsiasi versione compatibile con il runner CI (Dart 3.0.3).
+  # Ripristinare a ^1.0.8 (o versione compatibile con Dart >=3.1.0) quando i runner saranno aggiornati.
+  cupertino_icons: any
   shared_preferences: ^2.2.2
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
