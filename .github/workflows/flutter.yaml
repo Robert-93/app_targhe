@@ -14,6 +14,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.10.4'
+      - name: Debug Flutter
+        run: |
+          set -x
+          flutter --version
+          which flutter || where flutter || echo "flutter not found"
+          dart --version || echo "dart not found"
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze
