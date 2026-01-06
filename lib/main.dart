@@ -55,6 +55,11 @@ class StorageManager {
     final prefs = await SharedPreferences.getInstance();
     final String data = jsonEncode(dipendenti.map((d) => d.toJson()).toList());
     await prefs.setString(keyDipendenti, data);
+
+    // Notify SyncManager if enabled
+    try {
+      await SyncManager.instance.onLocalDipendentiChanged(dipendenti);
+    } catch (_) {}
   }
 
   static Future<List<Mezzo>> caricaMezzi() async {
@@ -69,6 +74,11 @@ class StorageManager {
     final prefs = await SharedPreferences.getInstance();
     final String data = jsonEncode(mezzi.map((m) => m.toJson()).toList());
     await prefs.setString(keyMezzi, data);
+
+    // Notify SyncManager
+    try {
+      await SyncManager.instance.onLocalMezziChanged(mezzi);
+    } catch (_) {}
   }
 
   static Future<Map<String, int>> caricaAssegnazioni() async {
@@ -82,6 +92,11 @@ class StorageManager {
   static Future<void> salvaAssegnazioni(Map<String, int> assegnazioni) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(keyAssegnazioni, jsonEncode(assegnazioni));
+
+    // Notify SyncManager
+    try {
+      await SyncManager.instance.onLocalAssegnazioniChanged(assegnazioni);
+    } catch (_) {}
   }
 }
 
@@ -102,7 +117,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = true;
 
   // Sync manager and flag
-  final syncManager = SyncManager();
+  final syncManager = SyncManager.instance;
   bool isSyncEnabled = false;
 
   @override

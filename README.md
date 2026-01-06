@@ -53,7 +53,35 @@ If you need automatic synchronization between multiple users/devices, a recommen
 2. Create a Firebase project and download platform configuration files (`google-services.json` for Android, `GoogleService-Info.plist` for iOS).
 3. Initialize Firebase in `main()` with `Firebase.initializeApp()` and write code to mirror local data (dipendenti/mezzi/assegnazioni) to Firestore collections, and listen for remote changes to merge them locally.
 
-If you want, I can add an optional `SyncManager` scaffold that attempts to sync with Firestore when configured; tell me if you prefer this and I will implement it and add configuration steps.
+A full `SyncManager` implementation is available in `lib/sync_manager.dart`. It integrates with Cloud Firestore and supports:
+
+- Enabling/disabling sync from the Home page AppBar.
+- Bidirectional sync: uploads local collections to Firestore and listens to remote updates.
+- Minimal conflict resolution using `updatedAt` timestamps (last write wins).
+
+To enable real sync:
+
+1. Create a Firebase project and register your app(s).
+2. Download and add `google-services.json` (Android) and/or `GoogleService-Info.plist` (iOS) into the platform-specific directories.
+3. Follow the FlutterFire docs to configure platforms: https://firebase.flutter.dev/docs/overview
+4. Run the app and toggle the Sync button in the Home AppBar (it will perform an initial push and then listen for remote changes).
+
+Notes:
+- The sync implementation is safe-by-default and will no-op if Firebase is not configured.
+- Firestore collections used: `dipendenti`, `mezzi`, `meta/assegnazioni`.
+
+## Git / Remote
+
+I initialized a local Git repository and created a commit. To push to a remote GitHub repo:
+
+```bash
+# replace <remote-url> with your repository URL
+git remote add origin <remote-url>
+git branch -M main
+git push -u origin main
+```
+
+If you want, I can add the remote and push for you if you provide the repository URL and confirm.
 
 ---
 
