@@ -20,8 +20,30 @@ jobs:
           flutter --version
           which flutter || where flutter || echo "flutter not found"
           dart --version || echo "dart not found"
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache Pub packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+      - name: Install dependencies (with retry)
+        run: |
+          set -e
+          retry() {
+            local n=0
+            local max=3
+            until [ $n -ge $max ]; do
+              if flutter pub get; then
+                return 0
+              fi
+              n=$((n+1))
+              echo "flutter pub get failed; retry #$n"
+              sleep $((n * 5))
+            done
+            return 1
+          }
+          retry
       - name: Analyze
         run: flutter analyze
       - name: Run tests
