@@ -47,23 +47,29 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-
-      - name: Install dependencies (with retry)
+      - name: Install dependencies (with retry and verbose logging)
         run: |
-          set -e
+          set -x
+          mkdir -p ci-logs
           retry() {
             local n=0
             local max=3
             until [ $n -ge $max ]; do
-              if flutter pub get; then
+              if flutter pub get --verbose > ci-logs/pub_get.log 2>&1; then
                 return 0
               fi
               n=$((n+1))
-              echo "flutter pub get failed; retry #$n"
+              echo "flutter pub get failed; retry #$n" | tee -a ci-logs/pub_get.log
               sleep $((n * 5))
             done
             return 1
           }
           retry
+      - name: Upload pub_get log
+        uses: actions/upload-artifact@v4
+        with:
+          name: pub_get_log
+          path: ci-logs/pub_get.log
       - name: Analyze
         run: flutter analyze
       - name: Run tests
