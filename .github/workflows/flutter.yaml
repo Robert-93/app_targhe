@@ -14,6 +14,26 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.10.4'
+      - name: Inject Firebase config from Secrets
+        env:
+          FIREBASE_ANDROID_JSON: ${{ secrets.FIREBASE_ANDROID_JSON }}
+          FIREBASE_IOS_PLIST: ${{ secrets.FIREBASE_IOS_PLIST }}
+        run: |
+          set -e
+          if [ -n "$FIREBASE_ANDROID_JSON" ]; then
+            mkdir -p android/app
+            printf '%s' "$FIREBASE_ANDROID_JSON" > android/app/google-services.json
+            echo "Wrote android/app/google-services.json from secret"
+          else
+            echo "No FIREBASE_ANDROID_JSON secret found"
+          fi
+          if [ -n "$FIREBASE_IOS_PLIST" ]; then
+            mkdir -p ios/Runner
+            printf '%s' "$FIREBASE_IOS_PLIST" > ios/Runner/GoogleService-Info.plist
+            echo "Wrote ios/Runner/GoogleService-Info.plist from secret"
+          else
+            echo "No FIREBASE_IOS_PLIST secret found"
+          fi
       - name: Debug Flutter
         run: |
           set -x

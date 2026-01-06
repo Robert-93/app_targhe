@@ -75,7 +75,19 @@ Important security notes:
 - Do **not** commit these files to a public repository if they contain credentials for production projects. We added `.gitignore` entries so by default they are ignored.
 - Alternative approaches: store the files in a private repository, use environment-specific CI secrets, or use Firebase config via CI secrets/secure storage and inject at build time.
 
-If you want, you can share the downloaded files with me (via a secure channel) and I will add them to the project in a feature branch and configure the app. Otherwise, add them locally and run the app—`SyncManager` and the `main()` initializer will attempt to initialize Firebase and will no-op safely if configuration is missing.
+If you want, you can share the downloaded files with me (via a secure channel) and I will add them to the project in a feature branch and configure the app. DO NOT commit `google-services.json` or `GoogleService-Info.plist` to a public repository.
+
+Recommended secure approach (CI injection via GitHub Secrets):
+
+1. In the GitHub repository, go to **Settings → Secrets → Actions → New repository secret**.
+2. Add a secret with the name `FIREBASE_ANDROID_JSON` and paste the full contents of `google-services.json` (including newlines). Save it.
+3. Add a secret with the name `FIREBASE_IOS_PLIST` and paste the full contents of `GoogleService-Info.plist`.
+
+The CI workflow will automatically write these secrets to `android/app/google-services.json` and `ios/Runner/GoogleService-Info.plist` at runtime if they are present, so no credentials need to be stored in the repo.
+
+If you prefer to add the files locally instead, place them in the following paths and do not push them to the repo:
+- Android: `android/app/google-services.json`
+- iOS: `ios/Runner/GoogleService-Info.plist`
 
 Notes:
 - The sync implementation is safe-by-default and will no-op if Firebase is not configured.
