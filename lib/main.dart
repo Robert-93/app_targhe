@@ -16,8 +16,16 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'sync_manager.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    // Firebase not configured or failed to initialize; continue without cloud sync
+    // SyncManager.init will also attempt to initialize Firebase lazily when needed.
+  }
   runApp(const AppTarghe());
 }
 

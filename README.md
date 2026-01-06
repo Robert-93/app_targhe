@@ -62,9 +62,20 @@ A full `SyncManager` implementation is available in `lib/sync_manager.dart`. It 
 To enable real sync:
 
 1. Create a Firebase project and register your app(s).
-2. Download and add `google-services.json` (Android) and/or `GoogleService-Info.plist` (iOS) into the platform-specific directories.
+2. Download and add `google-services.json` (Android) and/or `GoogleService-Info.plist` (iOS) into the platform-specific directories (see detailed instructions below).
 3. Follow the FlutterFire docs to configure platforms: https://firebase.flutter.dev/docs/overview
 4. Run the app and toggle the Sync button in the Home AppBar (it will perform an initial push and then listen for remote changes).
+
+Firebase local config files (how to add them safely)
+
+- Android: place the file you download from Firebase at `android/app/google-services.json`.
+- iOS: place the downloaded `GoogleService-Info.plist` at `ios/Runner/GoogleService-Info.plist`.
+
+Important security notes:
+- Do **not** commit these files to a public repository if they contain credentials for production projects. We added `.gitignore` entries so by default they are ignored.
+- Alternative approaches: store the files in a private repository, use environment-specific CI secrets, or use Firebase config via CI secrets/secure storage and inject at build time.
+
+If you want, you can share the downloaded files with me (via a secure channel) and I will add them to the project in a feature branch and configure the app. Otherwise, add them locally and run the app—`SyncManager` and the `main()` initializer will attempt to initialize Firebase and will no-op safely if configuration is missing.
 
 Notes:
 - The sync implementation is safe-by-default and will no-op if Firebase is not configured.
