@@ -3,7 +3,9 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-}
+    // Google Services plugin (adds support for google-services.json)
+    id("com.google.gms.google-services")
+} 
 
 android {
     namespace = "com.example.app_targhe"
