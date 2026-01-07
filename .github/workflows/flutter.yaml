@@ -78,6 +78,14 @@ jobs:
         with:
           name: pub_get_log
           path: ci-logs/
+      - name: Show pub_get tail (for diagnostics)
+        run: |
+          echo "---- last 200 lines of pub_get log ----"
+          if [ -f ci-logs/pub_get.log ]; then
+            tail -n 200 ci-logs/pub_get.log || true
+          else
+            echo "pub_get.log not found"
+          fi
       - name: Fail if pub_get failed
         run: |
           if [ -f ci-logs/pub_get_rc ]; then
