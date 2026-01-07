@@ -95,8 +95,36 @@ jobs:
               exit $rc
             fi
           fi
-      - name: Analyze
-        run: flutter analyze
+      - name: Analyze (capture and upload)
+        id: analyze
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p ci-logs
+          flutter analyze 2>&1 | tee ci-logs/analyze.log
+          echo $? > ci-logs/analyze_rc
+      - name: Upload analyze log
+        uses: actions/upload-artifact@v4
+        with:
+          name: analyze_log
+          path: ci-logs/
+      - name: Show analyze tail (for diagnostics)
+        run: |
+          echo "---- last 200 lines of analyze log ----"
+          if [ -f ci-logs/analyze.log ]; then
+            tail -n 200 ci-logs/analyze.log || true
+          else
+            echo "analyze.log not found"
+          fi
+      - name: Fail if analyze failed
+        run: |
+          if [ -f ci-logs/analyze_rc ]; then
+            rc=$(cat ci-logs/analyze_rc)
+            if [ "$rc" != "0" ]; then
+              echo "flutter analyze failed with exit code $rc"
+              exit $rc
+            fi
+          fi
       - name: Run tests
         run: |
           mkdir -p /tmp/flutter_test_temp
