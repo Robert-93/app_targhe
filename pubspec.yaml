@@ -19,9 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  # Temporaneo: permettiamo Dart >=3.0.0 per compatibilità con il runner CI.
-  # Aggiorneremo questo vincolo a ^3.10.4 quando il runner avrà Dart >=3.10.4.
-  sdk: ^3.0.0
+  sdk: ^3.10.4
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,9 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Temporaneo: consentiamo qualsiasi versione compatibile con il runner CI (Dart 3.0.3).
-  # Ripristinare a ^1.0.8 (o versione compatibile con Dart >=3.1.0) quando i runner saranno aggiornati.
-  cupertino_icons: any
+  cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.2
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
@@ -52,11 +48,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # Temporaneamente disabilitiamo `flutter_lints` per permettere al CI (runner
-  # con Dart più vecchio) di risolvere le dipendenze. Ripristineremo la dipendenza
-  # con una versione compatibile o quando i runner avranno una versione più nuova
-  # di Dart.
-  # flutter_lints: ^6.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
